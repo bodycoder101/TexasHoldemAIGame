@@ -25,7 +25,7 @@ def main():
     name = "落地98k"
     phonenum = "18589080609"
     password = "fight@98k"
-    ticket = "apky7ukvbij6z17dpwe5uipzph3ejb"
+    ticket = "z80el24732fqr6g3lxit8aqgerkxq1"
     port = "9099"
 
     # start playing
