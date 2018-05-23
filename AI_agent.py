@@ -26,7 +26,7 @@ def main():
     config = ConfigParser.ConfigParser()
     config.read('Config.ini')
     name = config.get('User', 'name')
-    phoneNum = config.get('User', 'phonenum')
+    phone_num = config.get('User', 'phonenum')
     password = config.get('User', 'password')
     server = config.get('Server', 'URL')
     ticket = config.get('Server', 'ticket')
@@ -34,7 +34,7 @@ def main():
 
     # start playing
     logger.info("start playing for: " + name)
-    player = THPlayer(server, name, phoneNum, password, ticket, port)
+    player = THPlayer(server, name, phone_num, password, ticket, port)
     player.playGame()
 
 
@@ -356,7 +356,7 @@ class THPlayer:
             result = self.ws.recv()
             logger.debug(result)
             msg = json.loads(result)
-            if not self._procEvent(msg["eventName"], msg["data"]):
+            if self._procEvent(msg["eventName"], msg["data"]) == False:
                 logger.info("Game over")
 
     def _quit(self):
