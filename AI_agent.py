@@ -22,9 +22,9 @@ def main():
     init_logger("Texa.log")
 
     server = "ws://ai.cad-stg.trendmicro.com:9099"
-    name = "落地98k"
-    phonenum = "18589080609"
-    password = "fight@98k"
+    name = "***"
+    phonenum = "***"
+    password = "***"
     ticket = "z80el24732fqr6g3lxit8aqgerkxq1"
     port = "9099"
 
