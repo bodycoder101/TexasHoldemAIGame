@@ -7,6 +7,7 @@ from websocket import create_connection
 from websocket import WebSocketException
 import logging
 import logging.handlers
+import ConfigParser
 from AI import deal
 from AI import flop
 from AI import turn
@@ -21,16 +22,19 @@ defaultSB = 10
 def main():
     init_logger("Texa.log")
 
-    server = "ws://ai.cad-stg.trendmicro.com:9099"
-    name = "***"
-    phonenum = "***"
-    password = "***"
-    ticket = "z80el24732fqr6g3lxit8aqgerkxq1"
-    port = "9099"
+    # read config files
+    config = ConfigParser.ConfigParser()
+    config.read('Config.ini')
+    name = config.get('User', 'name')
+    phoneNum = config.get('User', 'phonenum')
+    password = config.get('User', 'password')
+    server = config.get('Server', 'URL')
+    ticket = config.get('Server', 'ticket')
+    port = config.get('Server', 'port')
 
     # start playing
     logger.info("start playing for: " + name)
-    player = THPlayer(server, name, phonenum, password, ticket, port)
+    player = THPlayer(server, name, phoneNum, password, ticket, port)
     player.playGame()
 
 
@@ -93,9 +97,9 @@ class stubAI:
 
         myButton = 0  # 默认位置是除大小盲之外的位置
         if (data["self"]["playerName"] == data["game"]["smallBlind"]["playerName"]):
-            myButton = 2  # 表示我处在小盲位置
+            myButton = 1  # 表示我处在小盲位置
         elif (data["self"]["playerName"] == data["game"]["bigBlind"]["playerName"]):
-            myButton = 3  # 表示我处在大盲位置
+            myButton = 2  # 表示我处在大盲位置
 
         if data["game"]["roundName"] == "Deal":
             # deal(nplayer,sb,holecards,mySet,highestSet,myCash,myButton)
@@ -110,7 +114,8 @@ class stubAI:
                           data["self"]["bet"],
                           data["self"]["bet"] + data["self"]["minBet"],
                           data["self"]["chips"] + self.reloadCount * 1000, myButton,
-                          data["self"]["chips"] + self.reloadCount * 1000 + data["self"]["roundBet"] + data["self"]["bet"])
+                          data["self"]["chips"] + self.reloadCount * 1000 + data["self"]["roundBet"] + data["self"][
+                              "bet"])
             if action == -1:
                 logger.error("Wrong cards value: " + str(data["self"]["cards"]) + " " + str(data["game"]["board"]))
         elif data["game"]["roundName"] == "Turn":
@@ -120,7 +125,8 @@ class stubAI:
                           data["self"]["bet"],
                           data["self"]["bet"] + data["self"]["minBet"],
                           data["self"]["chips"] + self.reloadCount * 1000, myButton,
-                          data["self"]["chips"] + self.reloadCount * 1000 + data["self"]["roundBet"] + data["self"]["bet"])
+                          data["self"]["chips"] + self.reloadCount * 1000 + data["self"]["roundBet"] + data["self"][
+                              "bet"])
         else:
             # river(nplayer,sb,holecards,boardCards,mySet,highestSet,myCash,myButton,myRoundStartCash)
             action = river(nplayer, data["game"]["smallBlind"]["amount"], interpretCardValue(data["self"]["cards"]),
@@ -128,7 +134,8 @@ class stubAI:
                            data["self"]["bet"],
                            data["self"]["bet"] + data["self"]["minBet"],
                            data["self"]["chips"] + self.reloadCount * 1000, myButton,
-                           data["self"]["chips"] + self.reloadCount * 1000 + data["self"]["roundBet"] + data["self"]["bet"])
+                           data["self"]["chips"] + self.reloadCount * 1000 + data["self"]["roundBet"] + data["self"][
+                               "bet"])
         return action
 
     def Bet(self, data, cb_bet):
@@ -331,9 +338,9 @@ class THPlayer:
         for method in inspect.getmembers(self, predicate=inspect.ismethod):
             if method[0].startswith("cb"):
                 self.actionList[method[0][2:]] = method[1]
-                #         print method[0] #函数名 cb__action
-                #         print method[0][2:] #cb后面的 __action
-                #         print method[1] #绑定函数相当于提供函数指针 <bound method THPlayer.cb__action of <__main__.THPlayer instance at 0x03F93198>>
+                # print method[0] #函数名 cb__action
+                # print method[0][2:] #cb后面的 __action
+                # print method[1] # 绑定函数相当于提供函数指针 <bound method THPlayer.cb__action of <__main__.THPlayer instance at 0x03F93198>>
                 # print self.actionList
 
     def _procEvent(self, event, data):
@@ -381,5 +388,4 @@ class THPlayer:
 
 if __name__ == '__main__':
     main()
-     # interpretCardValue(["3D", "9S", "2H"])
-
+    # interpretCardValue(["3D", "9S", "2H"])

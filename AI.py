@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+# -*- coding:utf-8 -*-
 import random
 from CardsValue import turnCardsOdds
 from CardsValue import holeCardsOdds
@@ -23,7 +25,7 @@ def setMyDude(d, f, t, r):
 
 def deal(nplayer, sb, holecards, mySet, highestSet, myCash, myButton):
     global myDealDude4
-    players = nplayer  # 范围是2到5
+    players = nplayer  # players的范围是2到5
     if nplayer > 5:
         players = 5
     if nplayer < 2:
