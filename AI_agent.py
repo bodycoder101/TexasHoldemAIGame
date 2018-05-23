@@ -98,7 +98,7 @@ class stubAI:
             myButton = 3  # 表示我处在大盲位置
 
         if data["game"]["roundName"] == "Deal":
-            # deal(nplayer,sb,holecards,boardCards,mySet,highestSet,myCash,myButton,myRoundStartCash):
+            # deal(nplayer,sb,holecards,mySet,highestSet,myCash,myButton)
             action = deal(nplayer, data["game"]["smallBlind"]["amount"], interpretCardValue(data["self"]["cards"]),
                           data["self"]["bet"],
                           data["self"]["bet"] + data["self"]["minBet"],
@@ -211,14 +211,14 @@ class stubAI:
                 self.maxCount[player["playerName"]] = 0
             if player["playerName"] == self.playerName:
                 you = player
-                if you["folded"] == True:
+                if you["folded"]:
                     logging.info("you fold")
                 else:
                     logging.info("you not fold")
                 if you["winMoney"] > 0:
                     logging.info("you win")
 
-            if player["isSurvive"] == True:
+            if player["isSurvive"]:
                 if player["hand"]["rank"] > maxRank:
                     maxRank = player["hand"]["rank"]
                     maxRankPlayers = [player["playerName"]]
@@ -344,12 +344,12 @@ class THPlayer:
             self.cb__no_supported(event, data)
 
     def _playing(self):
-        while 1:
+        while True:
             # print "wait for event"
             result = self.ws.recv()
             logger.debug(result)
             msg = json.loads(result)
-            if self._procEvent(msg["eventName"], msg["data"]) == False:
+            if not self._procEvent(msg["eventName"], msg["data"]):
                 logger.info("Game over")
 
     def _quit(self):
