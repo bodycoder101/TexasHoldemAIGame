@@ -31,7 +31,7 @@
             "folded" : false,
             "allIn" : false,
             "isSurvive" : true,
-            "roundBet" : 0, //
+            "roundBet" : 0,
             "bet" : 10,
             "minBet" : 10,
             "cards" : ["JC", "KS"]
@@ -45,7 +45,7 @@
                 "playerName" : "cicy",
                 "amount" : 20
             },
-            "board" : [XX, XX, XX],
+            "board" : [],
             "raiseCount" : 0,
             "betCount" : 1,
             "roundName" : "Deal", // 其它可能的值为 : "Flop", "Turn", "River"
