@@ -239,13 +239,10 @@ def river(nplayer, sb, holecards, boardCards, mySet, highestSet, myCash, myButto
             myNiveau[2] += (21 - myCash / individualHighestSet) / 2
 
         if myOdds >= myNiveau[2]:
-
             if highestSet >= 12 * sb:
-
                 if myOdds >= myNiveau[2] + 15:
                     myAction = 4
                 else:
-
                     if myCash - highestSet <= (myCash * 1) / 5:
                         myAction = 4
                     else:
