@@ -7,14 +7,16 @@ from websocket import create_connection
 from websocket import WebSocketException
 import logging
 import logging.handlers
+from logging.handlers import RotatingFileHandler
 import ConfigParser
 from AI import deal
 from AI import flop
 from AI import turn
 from AI import river
 from AI import setMyDude
-import sys
+from colorlog import ColoredFormatter
 
+import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
@@ -37,27 +39,36 @@ def main():
     port = config.get('Server', 'port')
 
     # start playing
-    logger.info("start playing for: " + name)
+    logging.info("start playing for: " + name)
     player = THPlayer(server, name, phone_num, password, ticket, port)
     player.playGame()
 
 
+
 def init_logger(log_file_name):
-    global logger
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
                         datefmt='%Y-%m-%d %A %H:%M:%S',
                         filename=log_file_name,
                         filemode='w')
-    logger = logging.getLogger()
+    Rthandler = RotatingFileHandler(log_file_name, maxBytes=10*1024*1024, backupCount=5)
+    Rthandler.setLevel(logging.DEBUG)
+    logging.getLogger().addHandler(Rthandler)
 
     # 在调试界面的log显示
+    logFormat = "%(log_color)s%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s%(reset)s | %(log_color)s%(" \
+                "message)s%(reset)s "
+    formatter = ColoredFormatter(logFormat)
     console = logging.StreamHandler()
     console.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s')
     console.setFormatter(formatter)
-    logging.getLogger('').addHandler(console)
-
+    logging.getLogger().addHandler(console)
+    
+    # console = logging.StreamHandler()
+    # console.setLevel(logging.InFO)
+    # formatter = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s')
+    # console.setFormatter(formatter)
+    # logging.getLogger('').addHandler(console)
 
 PointDict = {'2': 0, '3': 1, '4': 2, '5': 3, '6': 4, '7': 5, '8': 6, '9': 7, 'T': 8, 'J': 9, 'Q': 10, 'K': 11, 'A': 12}
 ColorDict = {'H': 0, 'S': 1, 'C': 2, 'D': 3}
@@ -67,7 +78,7 @@ def interpretCardValue(CardList):
     cardValueList = []
     cardvalue = 0
     for ListValue in CardList:
-        if ((len(ListValue) == 2) and (ListValue[0] in PointDict.keys()) and (ListValue[1] in ColorDict.keys())):
+        if (len(ListValue) == 2) and (ListValue[0] in PointDict.keys()) and (ListValue[1] in ColorDict.keys()):
             pointMetric = PointDict[ListValue[0]]
             colorMetric = ColorDict[ListValue[1]]
             cardvalue = pointMetric + colorMetric * 13
@@ -76,11 +87,11 @@ def interpretCardValue(CardList):
 
 
 class stubAI:
-    global logger
 
     winPlayer = {}
     playerCards = {}
     actionsForEachPlayer = {}
+
 
     def _setDefualtDude(self):
         setMyDude(8, -3, 0, -3)
@@ -94,11 +105,11 @@ class stubAI:
         self.sb = defaultSB
 
     def _Action(self, data):
-        global logger
+        
         action = 0
         nplayer = 0
         for player in data["game"]["players"]:  # 计算牌桌剩余玩家个数
-            if player["folded"] == False:
+            if not player["folded"]:
                 nplayer += 1
 
         myButton = 0  # 默认位置是除大小盲之外的位置
@@ -123,7 +134,7 @@ class stubAI:
                           data["self"]["chips"] + self.reloadCount * 1000 + data["self"]["roundBet"] + data["self"][
                               "bet"])
             if action == -1:
-                logger.error("Wrong cards value: " + str(data["self"]["cards"]) + " " + str(data["game"]["board"]))
+                logging.error("Wrong cards value: " + str(data["self"]["cards"]) + " " + str(data["game"]["board"]))
         elif data["game"]["roundName"] == "Turn":
             # turn(nplayer,sb,holecards,boardCards,mySet,highestSet,myCash,myButton,myRoundStartCash)
             action = turn(nplayer, data["game"]["smallBlind"]["amount"], interpretCardValue(data["self"]["cards"]),
@@ -145,6 +156,7 @@ class stubAI:
         return action
 
     def Bet(self, data, cb_bet):
+        
         for player in data["game"]["players"]:
             if player["playerName"] == self.playerName:
                 global totalReloadCount
@@ -168,6 +180,7 @@ class stubAI:
         self.sb = data["game"]["smallBlind"]["amount"]
 
     def Action(self, data, cb_action):  # cb_action相当于函数指针，将函数指针传过来
+        
         for player in data["game"]["players"]:
             if player["playerName"] == self.playerName:
                 global totalReloadCount
@@ -199,8 +212,8 @@ class stubAI:
                     self.reloadCount = totalReloadCount - player["reloadCount"] - 1  # 还剩余的reload次数
 
     def NewRound(self, data):
-        global logger
-        logger.info("new round")
+        
+        logging.info("new round")
         self.sb = data["table"]["smallBlind"]["amount"]
         for player in data["players"]:
             if player["playerName"] == self.playerName:
@@ -208,6 +221,7 @@ class stubAI:
                 self.reloadCount = totalReloadCount - player["reloadCount"]
 
     def ShowAction(self, data):
+        
         logging.info(data["action"]["playerName"]+" take action: "+data["action"]["action"])
         self.actionsForEachPlayer[data["action"]["playerName"]] = data["action"]["action"]
 
@@ -215,6 +229,7 @@ class stubAI:
         return
 
     def RoundEnd(self, data):  # 将所有玩家的牌存入dict中，并打印出来，
+        
         logging.info("round end.")
         # 将两个Dict初始化为空
         self.winPlayer = {}
@@ -325,17 +340,17 @@ class THPlayer:
                 # print self.actionList
 
     def _procEvent(self, event, data):
-        global logger
         if event in self.actionList:
             return self.actionList[event](event, data)  # 根据action，找相应的处理函数
         else:
             self.cb__no_supported(event, data)
 
     def _playing(self):
+        
         while True:
             # print "wait for event"
             result = self.ws.recv()
-            logger.debug(result)
+            logging.debug(result)
             try:
                 msg = json.loads(result)
                 self._procEvent(msg["eventName"], msg["data"])
@@ -348,18 +363,18 @@ class THPlayer:
         self.ws.close()
 
     def playGame(self):
-        global logger
+        
         gameOver = False
         self.ws = create_connection(self.wsServer)
         while not gameOver:
             try:
-                logger.info("Join game")
+                logging.info("Join game")
                 self._sendJoinMsg()
                 self._playing()
                 gameOver = True
             except WebSocketException as e:
-                logger.error(e.message)
-                logger.error("Reset connection")
+                logging.error(e.message)
+                logging.error("Reset connection")
 
                 # reset connection
                 self.ws.close()
