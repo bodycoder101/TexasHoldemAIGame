@@ -214,7 +214,7 @@ class stubAI:
         self.sb = data["table"]["smallBlind"]["amount"]
         for player in data["players"]:
             if player["playerName"] == self.playerName:
-				logging.info("remain chips:%s" % player["chips"])
+                logging.info("remain chips:%s" % player["chips"])
                 global totalReloadCount
                 self.reloadCount = totalReloadCount - player["reloadCount"]
 
