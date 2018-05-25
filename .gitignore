@@ -2,10 +2,15 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
-.idea/**/workspace.xml
+.idea/workspace.xml
+.idea/misc.xml
+.idea/TexasHoldemAIGame.iml
 .idea/**/tasks.xml
-.idea/**/dictionaries
+.idea/dictionaries/*
 .idea/**/shelf
+
+*.pyc
+*.log
 
 # Sensitive or high-churn files
 .idea/**/dataSources/
