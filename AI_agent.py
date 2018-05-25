@@ -63,7 +63,7 @@ def init_logger(log_file_name):
     console.setLevel(logging.INFO)
     console.setFormatter(formatter)
     logging.getLogger().addHandler(console)
-    
+
     # console = logging.StreamHandler()
     # console.setLevel(logging.InFO)
     # formatter = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s')
@@ -105,7 +105,7 @@ class stubAI:
         self.sb = defaultSB
 
     def _Action(self, data):
-        
+
         action = 0
         nplayer = 0
         for player in data["game"]["players"]:  # 计算牌桌剩余玩家个数
@@ -156,7 +156,6 @@ class stubAI:
         return action
 
     def Bet(self, data, cb_bet):
-        
         for player in data["game"]["players"]:
             if player["playerName"] == self.playerName:
                 global totalReloadCount
@@ -180,7 +179,6 @@ class stubAI:
         self.sb = data["game"]["smallBlind"]["amount"]
 
     def Action(self, data, cb_action):  # cb_action相当于函数指针，将函数指针传过来
-        
         for player in data["game"]["players"]:
             if player["playerName"] == self.playerName:
                 global totalReloadCount
@@ -212,16 +210,15 @@ class stubAI:
                     self.reloadCount = totalReloadCount - player["reloadCount"] - 1  # 还剩余的reload次数
 
     def NewRound(self, data):
-        
         logging.info("new round")
         self.sb = data["table"]["smallBlind"]["amount"]
         for player in data["players"]:
             if player["playerName"] == self.playerName:
+				logging.info("remain chips:%s" % player["chips"])
                 global totalReloadCount
                 self.reloadCount = totalReloadCount - player["reloadCount"]
 
     def ShowAction(self, data):
-        
         logging.info(data["action"]["playerName"]+" take action: "+data["action"]["action"])
         self.actionsForEachPlayer[data["action"]["playerName"]] = data["action"]["action"]
 
@@ -229,7 +226,6 @@ class stubAI:
         return
 
     def RoundEnd(self, data):  # 将所有玩家的牌存入dict中，并打印出来，
-        
         logging.info("round end.")
         # 将两个Dict初始化为空
         self.winPlayer = {}
@@ -346,7 +342,7 @@ class THPlayer:
             self.cb__no_supported(event, data)
 
     def _playing(self):
-        
+
         while True:
             # print "wait for event"
             result = self.ws.recv()
@@ -363,7 +359,6 @@ class THPlayer:
         self.ws.close()
 
     def playGame(self):
-        
         gameOver = False
         self.ws = create_connection(self.wsServer)
         while not gameOver:
