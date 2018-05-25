@@ -13,6 +13,10 @@ from AI import flop
 from AI import turn
 from AI import river
 from AI import setMyDude
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 logger = None
 totalReloadCount = 2
@@ -74,7 +78,9 @@ def interpretCardValue(CardList):
 class stubAI:
     global logger
 
-    maxCount = {}
+    winPlayer = {}
+    playerCards = {}
+    actionsForEachPlayer = {}
 
     def _setDefualtDude(self):
         setMyDude(8, -3, 0, -3)
@@ -188,7 +194,7 @@ class stubAI:
         global totalReloadCount
         for player in data["players"]:
             if player["playerName"] == self.playerName:
-                if player["chips"] / self.sb < 8 and player["reloadCount"] < totalReloadCount:
+                if player["chips"] / self.sb < 16 and player["reloadCount"] < totalReloadCount:
                     cb_reload()
                     self.reloadCount = totalReloadCount - player["reloadCount"] - 1  # 还剩余的reload次数
 
@@ -202,62 +208,37 @@ class stubAI:
                 self.reloadCount = totalReloadCount - player["reloadCount"]
 
     def ShowAction(self, data):
-        return
+        logging.info(data["action"]["playerName"]+" take action: "+data["action"]["action"])
+        self.actionsForEachPlayer[data["action"]["playerName"]] = data["action"]["action"]
 
     def Deal(self, data):
         return
 
-    def RoundEnd(self, data):
-        global logger
-        logger.info("round end")
-        out = ""
-        maxRank = 0
-        maxRankPlayers = []  # 表示存储的是筹码最多（Rank值最大的）的一个玩家, 如果筹码相同的话，可以存储多个
+    def RoundEnd(self, data):  # 将所有玩家的牌存入dict中，并打印出来，
+        logging.info("round end.")
+        # 将两个Dict初始化为空
+        self.winPlayer = {}
+        self.playerCards = {}
+
         for player in data["players"]:
-            if player["playerName"] not in self.maxCount:  # maxCount = {}是一个Dict，用来记录玩家赢的次数{'落地98k':0} 表示的是没有赢过一次
-                self.maxCount[player["playerName"]] = 0
-            if player["playerName"] == self.playerName:
-                you = player
-                if you["folded"]:
-                    logging.info("you fold")
-                else:
-                    logging.info("you not fold")
-                if you["winMoney"] > 0:
-                    logging.info("you win")
+            if player["winMoney"] > 0:  # 记录胜利玩家的牌
+                self.winPlayer[player["playerName"]] = player["hand"]["cards"]
 
-            if player["isSurvive"]:
-                if player["hand"]["rank"] > maxRank:
-                    maxRank = player["hand"]["rank"]
-                    maxRankPlayers = [player["playerName"]]
-                elif player["hand"]["rank"] == maxRank:
-                    maxRankPlayers.append(player["playerName"])
+            if player["isSurvive"]:  # 将所有幸存玩家的牌存入dict
+                self.playerCards[player["playerName"]] = player["hand"]["cards"]
 
-            for playerName in maxRankPlayers:
-                self.maxCount[playerName] += 1
-                if playerName == self.playerName and player["playerName"] == self.playerName:
-                    you = player
-                    if you["winMoney"] == 0:
-                        logging.info("your cards: " + str(you["hand"]["cards"]))
+        for key in self.winPlayer:
+            logging.info("This round %s win, hand cards: %s" % (key, self.winPlayer[key]))
 
-            for key in self.maxCount:
-                if key == self.playerName:
-                    out += "you:"
-                    out += str(self.maxCount[key]) + " "
-                    logging.info(out)
+        for key in self.playerCards:
+            logging.info("Player %s: %s" % (key, self.playerCards[key]))
+
 
     def GameOver(self, data):
-        global logger
-        logger.info("Game over")
+        logging.info("Game over!")
+        logging.info("rest chips for each player:")
         for player in data["players"]:
-            if player["playerName"] == self.playerName:
-                out = "you:"
-            else:
-                out = player["playerName"] + ":"
-
-            out += str(self.maxCount[player["playerName"]]) + " "
-            out += str(player["chips"])
-            logger.info(out)
-        self.maxCount = {}
+            logging.info(str(player["playerName"]) + ": "+str(player["chips"]))
 
 
 class THPlayer:
@@ -327,8 +308,8 @@ class THPlayer:
     def __init__(self, server, name, phonenum, password, ticket, port):
         self.wsServer = server
         self.playerName = name
-        self.playerNameMD5 = hashlib.md5(name).hexdigest()
-        self.AI = stubAI(self.playerNameMD5)
+        # self.playerNameMD5 = hashlib.md5(name).hexdigest()
+        self.AI = stubAI(self.playerName)
         self.phoneNum = phonenum
         self.passWordMD5 = hashlib.md5(password).hexdigest()
         self.ticket = ticket
@@ -355,9 +336,13 @@ class THPlayer:
             # print "wait for event"
             result = self.ws.recv()
             logger.debug(result)
-            msg = json.loads(result)
-            if self._procEvent(msg["eventName"], msg["data"]) == False:
-                logger.info("Game over")
+            try:
+                msg = json.loads(result)
+                self._procEvent(msg["eventName"], msg["data"])
+            except ValueError as e:
+                logging.error(e)
+                continue
+
 
     def _quit(self):
         self.ws.close()
