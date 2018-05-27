@@ -17,16 +17,16 @@ from AI import setMyDude
 from colorlog import ColoredFormatter
 
 import sys
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-logger = None
 totalReloadCount = 2
 defaultSB = 10
 
 
 def main():
-    init_logger("Texa.log")
+    init_logger("Texas.log")
 
     # read config files
     config = ConfigParser.ConfigParser()
@@ -44,14 +44,14 @@ def main():
     player.playGame()
 
 
-
 def init_logger(log_file_name):
+    # log在文件中的记录，每次重新运行会清空文件内容
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
                         datefmt='%Y-%m-%d %A %H:%M:%S',
                         filename=log_file_name,
                         filemode='w')
-    Rthandler = RotatingFileHandler(log_file_name, maxBytes=10*1024*1024, backupCount=5)
+    Rthandler = RotatingFileHandler(log_file_name, maxBytes=10 * 1024 * 1024, backupCount=5)
     Rthandler.setLevel(logging.DEBUG)
     logging.getLogger().addHandler(Rthandler)
 
@@ -70,6 +70,7 @@ def init_logger(log_file_name):
     # console.setFormatter(formatter)
     # logging.getLogger('').addHandler(console)
 
+
 PointDict = {'2': 0, '3': 1, '4': 2, '5': 3, '6': 4, '7': 5, '8': 6, '9': 7, 'T': 8, 'J': 9, 'Q': 10, 'K': 11, 'A': 12}
 ColorDict = {'H': 0, 'S': 1, 'C': 2, 'D': 3}
 
@@ -81,20 +82,19 @@ def interpretCardValue(CardList):
         if (len(ListValue) == 2) and (ListValue[0] in PointDict.keys()) and (ListValue[1] in ColorDict.keys()):
             pointMetric = PointDict[ListValue[0]]
             colorMetric = ColorDict[ListValue[1]]
+            # 将牌面值转换为Value，也是一个List
             cardvalue = pointMetric + colorMetric * 13
-        cardValueList.append(cardvalue)  # 将牌面值转换为Value，也是一个List
+        cardValueList.append(cardvalue)
     return cardValueList
 
 
 class stubAI:
-
     winPlayer = {}
     playerCards = {}
     actionsForEachPlayer = {}
 
-
-    def _setDefualtDude(self):
-        setMyDude(8, -3, 0, -3)
+    def _setDefualtDude(self):  # 根据训练结果进行概率微调
+        setMyDude(6, -3, 0, -3)
 
     def __init__(self, playerName):
         global totalReloadCount
@@ -131,8 +131,7 @@ class stubAI:
                           data["self"]["bet"],
                           data["self"]["bet"] + data["self"]["minBet"],
                           data["self"]["chips"] + self.reloadCount * 1000, myButton,
-                          data["self"]["chips"] + self.reloadCount * 1000 + data["self"]["roundBet"] + data["self"][
-                              "bet"])
+                          data["self"]["chips"] + self.reloadCount * 1000 + data["self"]["roundBet"] + data["self"]["bet"])
             if action == -1:
                 logging.error("Wrong cards value: " + str(data["self"]["cards"]) + " " + str(data["game"]["board"]))
         elif data["game"]["roundName"] == "Turn":
@@ -142,8 +141,7 @@ class stubAI:
                           data["self"]["bet"],
                           data["self"]["bet"] + data["self"]["minBet"],
                           data["self"]["chips"] + self.reloadCount * 1000, myButton,
-                          data["self"]["chips"] + self.reloadCount * 1000 + data["self"]["roundBet"] + data["self"][
-                              "bet"])
+                          data["self"]["chips"] + self.reloadCount * 1000 + data["self"]["roundBet"] + data["self"]["bet"])
         else:
             # river(nplayer,sb,holecards,boardCards,mySet,highestSet,myCash,myButton,myRoundStartCash)
             action = river(nplayer, data["game"]["smallBlind"]["amount"], interpretCardValue(data["self"]["cards"]),
@@ -151,8 +149,7 @@ class stubAI:
                            data["self"]["bet"],
                            data["self"]["bet"] + data["self"]["minBet"],
                            data["self"]["chips"] + self.reloadCount * 1000, myButton,
-                           data["self"]["chips"] + self.reloadCount * 1000 + data["self"]["roundBet"] + data["self"][
-                               "bet"])
+                           data["self"]["chips"] + self.reloadCount * 1000 + data["self"]["roundBet"] + data["self"]["bet"])
         return action
 
     def Bet(self, data, cb_bet):
@@ -219,7 +216,7 @@ class stubAI:
                 self.reloadCount = totalReloadCount - player["reloadCount"]
 
     def ShowAction(self, data):
-        logging.info(data["action"]["playerName"]+" take action: "+data["action"]["action"])
+        logging.info(data["action"]["playerName"] + " take action: " + data["action"]["action"])
         self.actionsForEachPlayer[data["action"]["playerName"]] = data["action"]["action"]
 
     def Deal(self, data):
@@ -227,6 +224,7 @@ class stubAI:
 
     def RoundEnd(self, data):  # 将所有玩家的牌存入dict中，并打印出来，
         logging.info("round end.")
+
         # 将两个Dict初始化为空
         self.winPlayer = {}
         self.playerCards = {}
@@ -241,15 +239,15 @@ class stubAI:
         for key in self.winPlayer:
             logging.info("This round %s win, hand cards: %s" % (key, self.winPlayer[key]))
 
+        logging.info("Hand cards for each player:")
         for key in self.playerCards:
             logging.info("Player %s: %s" % (key, self.playerCards[key]))
 
-
     def GameOver(self, data):
         logging.info("Game over!")
-        logging.info("rest chips for each player:")
+        logging.info("Rest chips for each player:")
         for player in data["players"]:
-            logging.info(str(player["playerName"]) + ": "+str(player["chips"]))
+            logging.info(str(player["playerName"]) + ": " + str(player["chips"]))
 
 
 class THPlayer:
@@ -276,7 +274,7 @@ class THPlayer:
 
     def _sendActionMsg(self, action, amount=None):
         data = {"action": action}
-        if (action == "bet"):
+        if action == "bet":
             data["amount"] = amount
         self._sendMsg("__action", data)
 
@@ -287,10 +285,10 @@ class THPlayer:
         return
 
     def cb__new_peer_2(self, event, data):
-        print event
+        logging.info("%s: %s" % (event, data))
 
     def cb__new_peer(self, event, data):
-        return
+        logging.info("%s: %s" % (event, data))
 
     def cb__new_round(self, event, data):
         self.AI.NewRound(data)
@@ -328,16 +326,16 @@ class THPlayer:
 
         self.actionList = {}  # 是一个dict，将action和处理action的函数绑定起来
         for method in inspect.getmembers(self, predicate=inspect.ismethod):
+            # method[0]: 函数名(cb__action)
+            # method[0][2:]: cb后面的 __action
+            # method[1]: 绑定的函数参数
             if method[0].startswith("cb"):
                 self.actionList[method[0][2:]] = method[1]
-                # print method[0] #函数名 cb__action
-                # print method[0][2:] #cb后面的 __action
-                # print method[1] # 绑定函数相当于提供函数指针 <bound method THPlayer.cb__action of <__main__.THPlayer instance at 0x03F93198>>
                 # print self.actionList
 
     def _procEvent(self, event, data):
         if event in self.actionList:
-            return self.actionList[event](event, data)  # 根据action，找相应的处理函数
+            return self.actionList[event](event, data)  # 根据event字段值，找相应的处理函数
         else:
             self.cb__no_supported(event, data)
 
@@ -354,7 +352,6 @@ class THPlayer:
                 logging.error(e)
                 continue
 
-
     def _quit(self):
         self.ws.close()
 
@@ -363,7 +360,7 @@ class THPlayer:
         self.ws = create_connection(self.wsServer)
         while not gameOver:
             try:
-                logging.info("Join game")
+                logging.info("Join game...")
                 self._sendJoinMsg()
                 self._playing()
                 gameOver = True
@@ -376,7 +373,7 @@ class THPlayer:
                 self.ws = create_connection(self.wsServer)
                 continue
             except Exception as e:
-                logger.exception(e)
+                logging.exception(e)
                 continue
         self._quit()
 

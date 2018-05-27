@@ -12,7 +12,7 @@ myTurnDude4 = 0
 myRiverDude4 = -3
 
 
-def setMyDude(d, f, t, r):
+def setMyDude(d, f, t, r):  # 进行概率微调
     global myDealDude4
     global myFlopDude4
     global myTurnDude4
@@ -69,7 +69,7 @@ def deal(nplayer, sb, holecards, mySet, highestSet, myCash, myButton):
 
         if myOdds >= myNiveau[0] or (mySet >= highestSet / 2 and myOdds >= myNiveau[0] - 8):
 
-            if (myButton == 3 and mySet == highestSet):
+            if myButton == 3 and mySet == highestSet:
                 myAction = 1
             else:
                 if myCash - highestSet <= (myCash * 1) / 5:
@@ -78,7 +78,7 @@ def deal(nplayer, sb, holecards, mySet, highestSet, myCash, myButton):
                     myAction = 2
         else:
             myAction = 0
-            if (myButton == 3 and mySet == highestSet):
+            if myButton == 3 and mySet == highestSet:
                 myAction = 1
             if myButton == 2 and myCash / highestSet > 25:
                 myAction = 2
@@ -104,7 +104,7 @@ def flop(nplayer, sb, holecards, boardCards, mySet, highestSet, myCash, myButton
     myNiveau[2] = 69 + myFlopDude4 - 7 * (players - 2)
 
     individualHighestSet = highestSet
-    if (individualHighestSet > myCash):
+    if individualHighestSet > myCash:
         individualHighestSet = myCash
     cBluff = random.randint(1, 100)
 
@@ -131,8 +131,8 @@ def flop(nplayer, sb, holecards, boardCards, mySet, highestSet, myCash, myButton
                 if myCash / (2 * sb) <= 6 or raiseValue >= (myCash * 4.0) / 5.0:
                     myAction = 4
         else:
-            if myOdds >= myNiveau[0] or (mySet >= highestSet / 2 and myOdds >= myNiveau[0] - 5) or (
-                        myRoundStartCash - myCash > individualHighestSet and myNiveau[0] - 3):
+            if myOdds >= myNiveau[0] or (mySet >= highestSet / 2 and myOdds >= myNiveau[0] - 5) \
+                    or (myRoundStartCash - myCash > individualHighestSet and myNiveau[0] - 3):
                 myAction = 2
                 if highestSet > (myCash * 3.0) / 4.0:
                     myAction = 4
@@ -192,8 +192,8 @@ def turn(nplayer, sb, holecards, boardCards, mySet, highestSet, myCash, myButton
                 if myCash / (2 * sb) <= 6 or raiseValue >= (myCash * 4.0) / 5.0:
                     myAction = 4
         else:
-            if myOdds >= myNiveau[0] or (mySet >= highestSet / 2 and myOdds >= myNiveau[0] - 5) or (
-                        myRoundStartCash - myCash > individualHighestSet and myNiveau[0] - 3):
+            if myOdds >= myNiveau[0] or (mySet >= highestSet / 2 and myOdds >= myNiveau[0] - 5) \
+                    or (myRoundStartCash - myCash > individualHighestSet and myNiveau[0] - 3):
                 myAction = 2
                 if highestSet > (myCash * 3.0) / 4.0:
                     myAction = 4
@@ -254,8 +254,8 @@ def river(nplayer, sb, holecards, boardCards, mySet, highestSet, myCash, myButto
                     myAction = 4
         else:
 
-            if myOdds >= myNiveau[0] or (mySet >= highestSet / 2 and myOdds >= myNiveau[0] - 5) or (
-                        myRoundStartCash - myCash > individualHighestSet and myNiveau[0] - 3):
+            if myOdds >= myNiveau[0] or (mySet >= highestSet / 2 and myOdds >= myNiveau[0] - 5) \
+                    or (myRoundStartCash - myCash > individualHighestSet and myNiveau[0] - 3):
                 myAction = 2
                 if myCash - highestSet <= (myCash * 1) / 4:
                     myAction = 4

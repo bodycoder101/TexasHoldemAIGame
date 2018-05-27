@@ -885,8 +885,7 @@ def flopCardsValue(cards):
                 array[k2][1] = ktemp[1]
                 array[k2][2] = ktemp[2]
 
-    if array[0][0] == array[1][0] and array[0][0] == array[2][0] and array[0][0] == array[3][0] and array[0][0] == \
-            array[4][0]:
+    if array[0][0] == array[1][0] and array[0][0] == array[2][0] and array[0][0] == array[3][0] and array[0][0] == array[4][0]:
         if array[0][1] - 4 == array[4][1]:
             return 80000
         else:
@@ -902,27 +901,26 @@ def flopCardsValue(cards):
             if array[j1][1] - 3 == array[j1 + 3][1]:
                 if array[j1][1] == 12:
                     for j2 in range(0, 4):
-                        if (array[j1 + j2][2] <= 1):
+                        if array[j1 + j2][2] <= 1:
                             temp += 1
-                    return (70012 + temp * 100)
+                    return 70012 + temp * 100
                 else:
                     for j2 in range(0, 4):
-                        if (array[j1 + j2][2] <= 1):
+                        if array[j1 + j2][2] <= 1:
                             temp += 1
-                    return (70000 + temp * 100 + array[j1][1])
+                    return 70000 + temp * 100 + array[j1][1]
             else:
                 if array[j1][1] - 4 == array[j1 + 3][1]:
                     for j2 in range(0, 4):
-                        if (array[j1 + j2][2] <= 1):
+                        if array[j1 + j2][2] <= 1:
                             temp += 1
-                    return (71000 + temp * 100 + array[j1][1])
+                    return 71000 + temp * 100 + array[j1][1]
                 else:
-                    if array[j1][1] == 12 and (array[j1 + 1][1] <= 3 or (
-                                j1 == 0 and array[j1 + 2][1] <= 3 and array[j1][0] == array[j1 + 4][0])):
+                    if array[j1][1] == 12 and (array[j1 + 1][1] <= 3 or (j1 == 0 and array[j1 + 2][1] <= 3 and array[j1][0] == array[j1 + 4][0])):
                         for j2 in range(0, 4):
-                            if (array[j1 + j2][2] <= 1):
+                            if array[j1 + j2][2] <= 1:
                                 temp += 1
-                        return (71012 + temp * 100)
+                        return 71012 + temp * 100
                     else:
                         for j2 in range(0, 4):
                             if array[j1 + j2][2] <= 1:
@@ -930,26 +928,26 @@ def flopCardsValue(cards):
                                 temp += 1
                         if temp == 2:
                             for j2 in range(0, 4):
-                                if (temp2Array[1] > array[j1 + j2][1]):
+                                if temp2Array[1] > array[j1 + j2][1]:
                                     temp1 += 1
-                                if (temp2Array[0] > array[j1 + j2][1]):
+                                if temp2Array[0] > array[j1 + j2][1]:
                                     temp2 += 1
-                            return (60000 + temp1 * 1000 + temp2 * 100 + array[j1][1])
+                            return 60000 + temp1 * 1000 + temp2 * 100 + array[j1][1]
                         else:
                             for j2 in range(0, 4):
                                 if j1 == 0:
-                                    if (array[4][1] < array[j1 + j2][1]):
+                                    if array[4][1] < array[j1 + j2][1]:
                                         temp1 += 1
                                 else:
-                                    if (array[0][1] < array[j1 + j2][1]):
+                                    if array[0][1] < array[j1 + j2][1]:
                                         temp1 += 1
-                            if (temp1 >= 2):
+                            if temp1 >= 2:
                                 temp1 = 1
-                            if (temp1 == 4):
+                            if temp1 == 4:
                                 temp1 = 2
 
                             for j2 in range(0, 4):
-                                if (temp2Array[0] < array[j1 + j2][1]):
+                                if temp2Array[0] < array[j1 + j2][1]:
                                     temp2 += 1
                             tempValue = (50000 + temp1 * 1000 + temp2 * 100 + temp2Array[0])
                             breakLoop = True
@@ -971,12 +969,14 @@ def flopCardsValue(cards):
         if array[j1][1] == array[j1 + 1][1] and array[j1][1] == array[j1 + 2][1] and array[j1][1] == array[j1 + 3][1]:
             return 80000
 
-    if (array[0][1] - 1 == array[1][1] or array[0][1] - 9 == array[1][1]) and array[1][1] - 1 == array[2][1] and \
-                            array[2][1] - 1 == array[3][1] and array[3][1] - 1 == array[4][1]:
+    if (array[0][1] - 1 == array[1][1] or array[0][1] - 9 == array[1][1]) \
+            and array[1][1] - 1 == array[2][1] \
+            and array[2][1] - 1 == array[3][1] \
+            and array[3][1] - 1 == array[4][1]:
         return 80000
 
-    if (array[0][1] == array[1][1] and array[0][1] == array[2][1] and array[3][1] == array[4][1]) or (
-                array[2][1] == array[3][1] and array[2][1] == array[4][1] and array[0][1] == array[1][1]):
+    if (array[0][1] == array[1][1] and array[0][1] == array[2][1] and array[3][1] == array[4][1]) \
+            or (array[2][1] == array[3][1] and array[2][1] == array[4][1] and array[0][1] == array[1][1]):
         return 80000
 
     for j1 in range(0, 5):
@@ -991,9 +991,8 @@ def flopCardsValue(cards):
                 for j4 in range(j3 + 1, 5):
                     if breakLoop:
                         break
-                    if (array[j1][1] - 1 == array[j2][1] or (
-                                array[j1][1] - 9 == array[j2][1] and array[j1][1] == 12)) and array[j2][1] - 1 == \
-                            array[j3][1] and array[j3][1] - 1 == array[j4][1]:
+                    if (array[j1][1] - 1 == array[j2][1] or (array[j1][1] - 9 == array[j2][1] and array[j1][1] == 12)) \
+                            and array[j2][1] - 1 == array[j3][1] and array[j3][1] - 1 == array[j4][1]:
                         if array[j1][1] == 12:
                             if array[j1][2] <= 1:
                                 temp2Array[temp] = array[j1][1]
@@ -1017,7 +1016,7 @@ def flopCardsValue(cards):
                                     temp1 += 1
                                 if temp2Array[0] > array[j4][1]:
                                     temp1 += 1
-                                if (temp1 >= 3):
+                                if temp1 >= 3:
                                     temp1 = 2
                                 tempValue = (40012 + temp1 * 2000)
                             else:
@@ -1029,7 +1028,7 @@ def flopCardsValue(cards):
                                     temp1 += 1
                                 if temp2Array[0] > array[j4][1]:
                                     temp1 += 1
-                                if (temp1 >= 1):
+                                if temp1 >= 1:
                                     temp1 = 2
                                 tempValue = (40012 + (temp1 + 1) * 1000)
                             breakLoop = True
@@ -1057,7 +1056,7 @@ def flopCardsValue(cards):
                                 if temp2Array[0] > array[j4][1]:
                                     temp1 += 1
 
-                                if (temp1 >= 3):
+                                if temp1 >= 3:
                                     temp1 = 2
                                 tempValue = (40000 + (temp1 + 2) * 2000 + array[j1][1])
 
@@ -1072,7 +1071,7 @@ def flopCardsValue(cards):
                                 if temp2Array[0] > array[j4][1]:
                                     temp1 += 1
 
-                                if (temp1 >= 1):
+                                if temp1 >= 1:
                                     temp1 = 2
 
                                 for j5 in range(0, 5):
@@ -1085,12 +1084,11 @@ def flopCardsValue(cards):
 
                             breakLoop = True
                     else:
-                        if (array[j1][1] - 2 == array[j2][1] and array[j2][1] - 1 == array[j3][1] and array[j3][
-                            1] - 1 == array[j4][1]) or (
-                                        array[j1][1] - 1 == array[j2][1] and array[j2][1] - 2 == array[j3][1] and
-                                    array[j3][1] - 1 == array[j4][1]) or (
-                                        array[j1][1] - 1 == array[j2][1] and array[j2][1] - 1 == array[j3][1] and
-                                    array[j3][1] - 2 == array[j4][1]):
+                        if (array[j1][1] - 2 == array[j2][1] and array[j2][1] - 1 == array[j3][1] and array[j3][1] - 1 == array[j4][1]) \
+                                or (array[j1][1] - 1 == array[j2][1]
+                                    and array[j2][1] - 2 == array[j3][1]
+                                    and array[j3][1] - 1 == array[j4][1]) \
+                                or (array[j1][1] - 1 == array[j2][1] and array[j2][1] - 1 == array[j3][1] and array[j3][1] - 2 == array[j4][1]):
 
                             if array[j1][2] <= 1:
                                 temp2Array[temp] = array[j1][1]
@@ -1121,7 +1119,7 @@ def flopCardsValue(cards):
                                 if temp2Array[0] > array[j4][1]:
                                     temp1 += 1
 
-                                if (temp1 >= 3):
+                                if temp1 >= 3:
                                     temp1 = 2
                                 tempValue = (40000 + temp1 * 2000 + array[j1][1])
 
@@ -1139,7 +1137,7 @@ def flopCardsValue(cards):
                                 if temp2Array[0] > array[j4][1]:
                                     temp1 += 1
 
-                                if (temp1 >= 1):
+                                if temp1 >= 1:
                                     temp1 = 2
 
                                 for j5 in range(0, 5):
@@ -1154,14 +1152,10 @@ def flopCardsValue(cards):
                             breakLoop = True
 
                         else:
-                            if array[j1][1] == 12 and ((array[j1][1] - 9 == array[j2][1] and array[j2][1] - 1 ==
-                                array[j3][1] and array[j3][1] - 1 == array[j4][1]) or (
-                                            array[j1][1] - 9 == array[j2][1] and array[j2][1] - 1 == array[j3][1] and
-                                        array[j3][1] - 2 == array[j4][1]) or (
-                                            array[j1][1] - 9 == array[j2][1] and array[j2][1] - 2 == array[j3][1] and
-                                        array[j3][1] - 1 == array[j4][1]) or (
-                                            array[j1][1] - 10 == array[j2][1] and array[j2][1] - 1 == array[j3][1] and
-                                        array[j3][1] - 1 == array[j4][1])):
+                            if array[j1][1] == 12 and ((array[j1][1] - 9 == array[j2][1] and array[j2][1] - 1 == array[j3][1] and array[j3][1] - 1 == array[j4][1]) or (
+                                                    array[j1][1] - 9 == array[j2][1] and array[j2][1] - 1 == array[j3][1] and array[j3][1] - 2 == array[j4][1]) or (
+                                                    array[j1][1] - 9 == array[j2][1] and array[j2][1] - 2 == array[j3][1] and array[j3][1] - 1 == array[j4][1]) or (
+                                                    array[j1][1] - 10 == array[j2][1] and array[j2][1] - 1 == array[j3][1] and array[j3][1] - 1 == array[j4][1])):
 
                                 if array[j1][2] <= 1:
                                     temp2Array[temp] = array[j1][1]
@@ -1192,7 +1186,7 @@ def flopCardsValue(cards):
                                     if temp2Array[0] > array[j4][1]:
                                         temp1 += 1
 
-                                    if (temp1 >= 3):
+                                    if temp1 >= 3:
                                         temp1 = 2
 
                                     tempValue = (40012 + temp1 * 2000)
@@ -1210,7 +1204,7 @@ def flopCardsValue(cards):
                                     if temp2Array[0] > array[j4][1]:
                                         temp1 += 1
 
-                                    if (temp1 >= 1):
+                                    if temp1 >= 1:
                                         temp1 = 2
 
                                     tempValue = (40004 + (temp1 + 1) * 1000 + 100)
@@ -1221,16 +1215,16 @@ def flopCardsValue(cards):
         if array[j1][1] == array[j1 + 1][1] and array[j1][1] == array[j1 + 2][1]:
 
             for j2 in range(0, 3):
-                if (array[j1 + j2][2] <= 1):
+                if array[j1 + j2][2] <= 1:
                     temp += 1
             if temp >= 1:
                 return 80000
             else:
                 if j1 == 0:
-                    return (30000 + array[j1 + 3][1])
+                    return 30000 + array[j1 + 3][1]
 
                 else:
-                    return (30100 + array[0][1])
+                    return 30100 + array[0][1]
 
     for j1 in range(0, 2):
         for j2 in range(j1 + 2, 4):
@@ -1247,14 +1241,14 @@ def flopCardsValue(cards):
 
                 if temp == 2:
                     if temp2Array[0] != temp2Array[1]:
-                        return (22200 + temp2Array[0])
+                        return 22200 + temp2Array[0]
 
                     else:
                         if temp2Array[0] == array[j1][1]:
-                            return (22100 + temp2Array[0])
+                            return 22100 + temp2Array[0]
 
                         else:
-                            return (22000 + temp2Array[0])
+                            return 22000 + temp2Array[0]
 
                 else:
                     if temp2Array[0] == array[j1][1]:
@@ -1271,36 +1265,36 @@ def flopCardsValue(cards):
         if array[j1][1] == array[j1 + 1][1]:
             if not breakLoop:
                 for j2 in range(0, 2):
-                    if (array[j1 + j2][2] <= 1):
+                    if array[j1 + j2][2] <= 1:
                         temp += 1
                 if temp == 2:
-                    return (12000 + j1 * 100 + array[j1][1])
+                    return 12000 + j1 * 100 + array[j1][1]
                 else:
                     if temp == 1:
                         for j2 in range(0, 5):
-                            if (array[j2][2] >= 2 and array[j2][1] > array[j1][1]):
+                            if array[j2][2] >= 2 and array[j2][1] > array[j1][1]:
                                 temp1 += 1
 
-                        return (11000 + temp1 * 100 + array[j1][1])
+                        return 11000 + temp1 * 100 + array[j1][1]
 
                     else:
                         for j2 in range(0, 5):
-                            if (array[j2][2] <= 1 and array[j2][1] > temp1):
+                            if array[j2][2] <= 1 and array[j2][1] > temp1:
                                 temp1 = array[j2][1]
 
                         for j2 in range(0, 5):
-                            if (array[j2][2] >= 2 and array[j2][1] > temp1):
+                            if array[j2][2] >= 2 and array[j2][1] > temp1:
                                 temp2 += 1
-                        if (temp2 == 2):
+                        if temp2 == 2:
                             temp2 = 1
-                        if (temp2 == 3):
+                        if temp2 == 3:
                             temp2 = 2
-                        return (10000 + temp2 * 100 + temp1)
+                        return 10000 + temp2 * 100 + temp1
             else:
                 if int(tempValue / 10000) == 4:
-                    return (int(tempValue / 1000) * 1000 + 200 + (tempValue - int(tempValue / 100) * 100))
+                    return int(tempValue / 1000) * 1000 + 200 + (tempValue - int(tempValue / 100) * 100)
                 else:
-                    return (int(tempValue / 10000) * 10000 + 3000 + (tempValue - int(tempValue / 1000) * 1000))
+                    return int(tempValue / 10000) * 10000 + 3000 + (tempValue - int(tempValue / 1000) * 1000)
 
     if not breakLoop:
         for j1 in range(0, 5):
@@ -1309,12 +1303,12 @@ def flopCardsValue(cards):
                 temp += 1
 
         for j1 in range(0, 5):
-            if (temp2Array[1] > array[j1][1]):
+            if temp2Array[1] > array[j1][1]:
                 temp1 += 1
-            if (temp2Array[0] > array[j1][1]):
+            if temp2Array[0] > array[j1][1]:
                 temp2 += 1
 
-        return (temp1 * 1000 + temp2 * 100 + array[0][1])
+        return temp1 * 1000 + temp2 * 100 + array[0][1]
     else:
         return tempValue
 
@@ -1374,7 +1368,7 @@ def riverCardsOdds(boardCards, myHoleCards):
                 if (myCards[card_idx_2 / 13] & (1 << (card_idx_2 % 13))) == 0:
                     opponentCards[card_idx_2 / 13] |= (1 << (card_idx_2 % 13))
                     countAll += 1
-                    if (cardsValue(myCards) >= cardsValue(opponentCards)):
+                    if cardsValue(myCards) >= cardsValue(opponentCards):
                         countMy += 1
                     opponentCards[card_idx_2 / 13] &= ~(1 << (card_idx_2 % 13))
             opponentCards[card_idx_1 / 13] &= ~(1 << (card_idx_1 % 13))
@@ -1387,14 +1381,13 @@ def cardsValue(cards):
     straight = [7936, 3968, 1984, 992, 496, 248, 124, 62, 31, 4111]
     # Royal Flush, Flush, Flush
     for color_1_idx in range(0, 4):  # check all colors
-        if (bin(cards[color_1_idx]).count("1") >= 5):  # check if at least 5 cards of one color
-            if ((cards[color_1_idx] & straight[0]) == straight[0]):  # check for Royal Flush
+        if bin(cards[color_1_idx]).count("1") >= 5:  # check if at least 5 cards of one color
+            if (cards[color_1_idx] & straight[0]) == straight[0]:  # check for Royal Flush
                 return 900000000  # Royal Flush
             else:
                 for card_idx in range(1, 10):
-                    if ((cards[color_1_idx] & straight[card_idx]) == straight[card_idx]):  # check for Straight Flush
-                        return (800000000 + (12 - card_idx) * 1000000)  # Straight Flush
-
+                    if (cards[color_1_idx] & straight[card_idx]) == straight[card_idx]:  # check for Straight Flush
+                        return 800000000 + (12 - card_idx) * 1000000  # Straight Flush
             # Flush
             return 500000000 + determineKickerValue(cards[color_1_idx], 0, 4)[0]
 
@@ -1420,7 +1413,6 @@ def cardsValue(cards):
     if temp1 > 0:
         if bin(temp1).count("1") == 2:
             # two times Three of a Kind
-
             return 600000000 + determineKickerValue(temp1, 0, 1)[0]
 
         else:
@@ -1431,19 +1423,14 @@ def cardsValue(cards):
             for color_1_idx in range(0, 3):
                 for color_2_idx in range(color_1_idx + 1, 4):
                     temp1 |= cards[color_1_idx] & cards[color_2_idx]
-
-            temp1 &= ~temp2;  # remove Three of a Kind from found pairs
+            temp1 &= ~temp2 # remove Three of a Kind from found pairs
             if temp1 > 0:
                 # with additional pair
-
-                return 600000000 + determineKickerValue(temp2, 0, 0)[0] + determineKickerValue(temp1, 1, 1)[
-                    0];  # Full House
+                return 600000000 + determineKickerValue(temp2, 0, 0)[0] + determineKickerValue(temp1, 1, 1)[0];  # Full House
 
             else:
                 # without addition pair
-
-                return 300000000 + determineKickerValue(temp2, 0, 0)[0] + determineKickerValue(OR & ~temp2, 1, 2)[
-                    0]  # Three of a Kind
+                return 300000000 + determineKickerValue(temp2, 0, 0)[0] + determineKickerValue(OR & ~temp2, 1, 2)[0]  # Three of a Kind
 
     # Two Pairs, of a Kind
     temp1 = 0
@@ -1458,8 +1445,7 @@ def cardsValue(cards):
 
         else:
 
-            return 100000000 + determineKickerValue(temp1, 0, 0)[0] + determineKickerValue(OR & ~temp1, 1, 3)[
-                0]  # Two of a Kind
+            return 100000000 + determineKickerValue(temp1, 0, 0)[0] + determineKickerValue(OR & ~temp1, 1, 3)[0]  # Two of a Kind
     # High Card
 
     return determineKickerValue(OR, 0, 4)[0]
@@ -1486,4 +1472,3 @@ def determineKickerValue(testValue, factorPointerStart, factorPointerEnd):
         compareValue >>= 1
     select = testValue & ~remain
     return factorValue, select
-
