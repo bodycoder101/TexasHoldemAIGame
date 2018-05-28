@@ -48,7 +48,7 @@
             "board" : [],
             "raiseCount" : 0,
             "betCount" : 1,
-            "roundName" : "Deal", // 其它可能的值为 : "Flop", "Turn", "River"
+            "roundName" : "Deal （其他可能的值Flop Turn River）",
             "players" :[
 				...
 			]
@@ -83,7 +83,11 @@ ws.send(json.dumps({
         }))
 ```
 ## 代码说明
-此仓库中代码相关说明，包括配置和决策
+此仓库中代码相关说明，包括环境、配置和决策
+
+### 环境及安装包
+- 解释器：Python 2.7
+- 安装包：websocket、colorlog。 其他为内建模块。
 
 ### AI决策返回代码说明
 | return action code | 动作说明          |
