@@ -31,7 +31,7 @@ def deal(nplayer, sb, holecards, mySet, highestSet, myCash, myButton):
     if nplayer < 2:
         players = 2
 
-    myOdds = holeCardsOdds(holecards, players)  # 从表中找到自己相应的概率
+    myOdds = holeCardsOdds(holecards, players)  # 从表中找到相应的概率
     myNiveau = {}
     myNiveau[0] = 43 + myDealDude4 - 6 * (players - 2)
     myNiveau[2] = 54 + myDealDude4 - 7 * (players - 2)

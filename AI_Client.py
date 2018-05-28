@@ -39,7 +39,7 @@ def main():
     port = config.get('Server', 'port')
 
     # start playing
-    logging.info("start playing for: " + name)
+    logging.info("Start playing for: " + name)
     player = THPlayer(server, name, phone_num, password, ticket, port)
     player.playGame()
 
@@ -51,6 +51,7 @@ def init_logger(log_file_name):
                         datefmt='%Y-%m-%d %A %H:%M:%S',
                         filename=log_file_name,
                         filemode='w')
+    # log备份回滚
     Rthandler = RotatingFileHandler(log_file_name, maxBytes=10 * 1024 * 1024, backupCount=5)
     Rthandler.setLevel(logging.DEBUG)
     logging.getLogger().addHandler(Rthandler)
