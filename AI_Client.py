@@ -83,7 +83,7 @@ def interpretCardValue(CardList):
         if (len(ListValue) == 2) and (ListValue[0] in PointDict.keys()) and (ListValue[1] in ColorDict.keys()):
             pointMetric = PointDict[ListValue[0]]
             colorMetric = ColorDict[ListValue[1]]
-            # 将牌面值转换为Value，也是一个List
+            # 将牌面值转换为Value，传入AI处理，cardvalue也是一个List
             cardvalue = pointMetric + colorMetric * 13
         cardValueList.append(cardvalue)
     return cardValueList
@@ -95,7 +95,7 @@ class stubAI:
     actionsForEachPlayer = {}
 
     def _setDefualtDude(self):  # 根据训练结果进行概率微调
-        setMyDude(6, -3, 0, -3)
+        setMyDude(8, -3, 0, -3)  # 稳健打法 8 -3 0 -3，激进打法 6 -3 0 -3
 
     def __init__(self, playerName):
         global totalReloadCount
@@ -203,7 +203,7 @@ class stubAI:
         global totalReloadCount
         for player in data["players"]:
             if player["playerName"] == self.playerName:
-                if player["chips"] / self.sb < 16 and player["reloadCount"] < totalReloadCount:
+                if player["chips"] / self.sb < 16 and player["reloadCount"] < totalReloadCount:  # 筹码数少于小盲16倍进行reload一次
                     cb_reload()
                     self.reloadCount = totalReloadCount - player["reloadCount"] - 1  # 还剩余的reload次数
 
@@ -361,7 +361,7 @@ class THPlayer:
         self.ws = create_connection(self.wsServer)
         while not gameOver:
             try:
-                logging.info("Join game...")
+                logging.info("Join game ...")
                 self._sendJoinMsg()
                 self._playing()
                 gameOver = True

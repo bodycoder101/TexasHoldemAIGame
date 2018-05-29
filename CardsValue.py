@@ -1426,7 +1426,7 @@ def cardsValue(cards):
             temp1 &= ~temp2 # remove Three of a Kind from found pairs
             if temp1 > 0:
                 # with additional pair
-                return 600000000 + determineKickerValue(temp2, 0, 0)[0] + determineKickerValue(temp1, 1, 1)[0];  # Full House
+                return 600000000 + determineKickerValue(temp2, 0, 0)[0] + determineKickerValue(temp1, 1, 1)[0]  # Full House
 
             else:
                 # without addition pair
