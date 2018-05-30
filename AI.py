@@ -6,6 +6,13 @@ from CardsValue import holeCardsOdds
 from CardsValue import flopCardsOdds
 from CardsValue import riverCardsOdds
 
+# return action code
+# 4: allin
+# 3: raise
+# 2: call
+# 1: check
+# 0：fold
+
 myDealDude4 = 8
 myFlopDude4 = -3
 myTurnDude4 = 0
@@ -49,39 +56,37 @@ def deal(nplayer, sb, holecards, mySet, highestSet, myCash, myButton):
 
     cBluff = random.randint(1, 100)
 
-    # Tools.GetRand(1, 100, 1, &cBluff)
-
     if myOdds >= myNiveau[2]:
         if highestSet >= 12 * sb:
             if myOdds >= myNiveau[2] + 8:
-                myAction = 4
+                myAction = 4  # allin
             else:
-                if myCash - highestSet <= (myCash * 1) / 5:  # 筹码太少直接allin
-                    myAction = 4
+                if myCash - highestSet <= ((myCash * 1) / 5):  # 筹码太少，直接allin
+                    myAction = 4  # allin
                 else:
-                    myAction = 2
+                    myAction = 2  # call
         else:
-            myAction = 3
+            myAction = 3  # raise
             raiseValue = ((int(myOdds) - myNiveau[2]) / 2) * 2 * sb
             if myCash / (2 * sb) <= 6 or raiseValue >= (myCash * 4) / 5:
-                myAction = 4
+                myAction = 4  # allin
     else:
 
         if myOdds >= myNiveau[0] or (mySet >= highestSet / 2 and myOdds >= myNiveau[0] - 8):
 
-            if myButton == 3 and mySet == highestSet:
-                myAction = 1
+            if myButton == 2 and mySet == highestSet:
+                myAction = 1  # 处在大盲，check
             else:
-                if myCash - highestSet <= (myCash * 1) / 5:
-                    myAction = 4
+                if myCash - highestSet <= ((myCash * 1) / 5):
+                    myAction = 4  # 筹码太少，直接allin
                 else:
-                    myAction = 2
+                    myAction = 2  # call 进场
         else:
-            myAction = 0
-            if myButton == 3 and mySet == highestSet:
-                myAction = 1
-            if myButton == 2 and myCash / highestSet > 25:
-                myAction = 2
+            myAction = 0  # 概率太低，fold
+            if myButton == 2 and mySet == highestSet:
+                myAction = 1  # 处在大盲，check
+            if myButton == 1 and myCash / highestSet > 50:
+                myAction = 2  # 处在小盲，且代价不大，可以进场打一枪
     return myAction
 
 
@@ -106,6 +111,7 @@ def flop(nplayer, sb, holecards, boardCards, mySet, highestSet, myCash, myButton
     individualHighestSet = highestSet
     if individualHighestSet > myCash:
         individualHighestSet = myCash
+
     cBluff = random.randint(1, 100)
 
     if highestSet > 0:
