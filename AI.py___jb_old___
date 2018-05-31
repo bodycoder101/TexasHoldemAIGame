@@ -54,6 +54,8 @@ def deal(nplayer, sb, holecards, mySet, highestSet, myCash, myButton):
     if myCash / individualHighestSet < 11:
         myNiveau[2] += (21 - myCash / individualHighestSet) / 2
 
+    cBluff = random.randint(1, 100)
+
     if myOdds >= myNiveau[2]:
         if highestSet >= 12 * sb:
             if myOdds >= myNiveau[2] + 8:
@@ -68,27 +70,10 @@ def deal(nplayer, sb, holecards, mySet, highestSet, myCash, myButton):
             raiseValue = ((int(myOdds) - myNiveau[2]) / 2) * 2 * sb
             if myCash / (2 * sb) <= 6 or raiseValue >= (myCash * 4) / 5:
                 myAction = 4  # allin
-
-        cBluff = random.randint(1, 100)
-        if cBluff > 90:
-            myAction = 2
-            if myButton == 2 and mySet == highestSet:
-                myAction = 1
-        if cBluff > 80 and (myOdds >= myNiveau[2] + 4):
-            myAction = 2
-            if myButton == 2 and mySet == highestSet:
-                myAction = 1
-        if cBluff > 70 and (myOdds >= myNiveau[2] + 8):
-            myAction = 2
-            if myButton == 2 and mySet == highestSet:
-                myAction = 1
-        if cBluff > 60 and (myOdds >= myNiveau[2] + 12):
-            myAction = 2
-            if myButton == 2 and mySet == highestSet:
-                myAction = 1
     else:
 
         if myOdds >= myNiveau[0] or (mySet >= highestSet / 2 and myOdds >= myNiveau[0] - 8):
+
             if myButton == 2 and mySet == highestSet:
                 myAction = 1  # 处在大盲，check
             else:
@@ -101,8 +86,7 @@ def deal(nplayer, sb, holecards, mySet, highestSet, myCash, myButton):
             if myButton == 2 and mySet == highestSet:
                 myAction = 1  # 处在大盲，check
             if myButton == 1 and myCash / highestSet > 50:
-                myAction = 2  # 处在小盲，且代价不大，可以进场打一枪，call
-
+                myAction = 2  # 处在小盲，且代价不大，可以进场打一枪
     return myAction
 
 
@@ -128,6 +112,8 @@ def flop(nplayer, sb, holecards, boardCards, mySet, highestSet, myCash, myButton
     if individualHighestSet > myCash:
         individualHighestSet = myCash
 
+    cBluff = random.randint(1, 100)
+
     if highestSet > 0:
         if myCash / individualHighestSet >= 25:
             myNiveau[0] += (25 - myCash / individualHighestSet) / 20
@@ -150,17 +136,6 @@ def flop(nplayer, sb, holecards, boardCards, mySet, highestSet, myCash, myButton
                 raiseValue = ((int(myOdds) - myNiveau[2]) / 5) * 2 * sb
                 if myCash / (2 * sb) <= 6 or raiseValue >= (myCash * 4.0) / 5.0:
                     myAction = 4
-
-            cBluff = random.randint(1, 100)
-            if cBluff > 90:
-                myAction = 2
-            if cBluff > 80 and (myOdds >= myNiveau[2] + 4):
-                myAction = 2
-            if cBluff > 70 and (myOdds >= myNiveau[2] + 8):
-                myAction = 2
-            if cBluff > 60 and (myOdds > myNiveau[2] + 12):
-                myAction = 2
-
         else:
             if myOdds >= myNiveau[0] or (mySet >= highestSet / 2 and myOdds >= myNiveau[0] - 5) \
                     or (myRoundStartCash - myCash > individualHighestSet and myNiveau[0] - 3):
@@ -179,29 +154,8 @@ def flop(nplayer, sb, holecards, boardCards, mySet, highestSet, myCash, myButton
 
             if bet > (myCash * 4.0) / 5.0:
                 myAction = 4
-
-            cBluff = random.randint(1, 100)
-            if cBluff > 80:
-                myAction = 1
-            if cBluff > 70 and (myOdds >= myNiveau[1]+4):
-                myAction = 1
-            if cBluff > 60 and (myOdds >= myNiveau[1]+8):
-                myAction = 1
-            if cBluff > 50 and (myOdds >= myNiveau[1]+12):
-                myAction = 1
-
         else:
             myAction = 1
-            if myButton == 0:
-                cBluff = random.randint(1, 100)
-                if cBluff <= 16:
-                    bet = (cBluff/4)*2*sb
-                    if bet == 0:
-                        bet = 2*sb
-                    if myCash/(2*sb) <= 6:
-                        myAction = 4
-                    if bet > (myCash * 4.0/5.0):
-                        myAction = 4
 
     return myAction
 
@@ -217,6 +171,8 @@ def turn(nplayer, sb, holecards, boardCards, mySet, highestSet, myCash, myButton
     individualHighestSet = highestSet
     if individualHighestSet > myCash:
         individualHighestSet = myCash
+
+    cBluff = random.randint(1, 100)
 
     if highestSet > 0:
         if myCash / individualHighestSet >= 25:
@@ -241,17 +197,6 @@ def turn(nplayer, sb, holecards, boardCards, mySet, highestSet, myCash, myButton
                 raiseValue = ((int(myOdds) - myNiveau[2]) / 4) * 2 * sb
                 if myCash / (2 * sb) <= 6 or raiseValue >= (myCash * 4.0) / 5.0:
                     myAction = 4
-
-            cBluff = random.randint(1, 100)
-            if cBluff > 90:
-                myAction = 2
-            if cBluff > 80 and (myOdds >= myNiveau[2] + 5):
-                myAction = 2
-            if cBluff > 70 and (myOdds >= myNiveau[2] + 10):
-                myAction = 2
-            if cBluff > 60 and (myOdds >= myNiveau[2] + 15):
-                myAction = 2
-
         else:
             if myOdds >= myNiveau[0] or (mySet >= highestSet / 2 and myOdds >= myNiveau[0] - 5) \
                     or (myRoundStartCash - myCash > individualHighestSet and myNiveau[0] - 3):
@@ -272,29 +217,8 @@ def turn(nplayer, sb, holecards, boardCards, mySet, highestSet, myCash, myButton
 
             if bet > (myCash * 4.0) / 5.0:
                 myAction = 4
-
-            cBluff = random.randint(1, 100)
-            if cBluff > 90:
-                myAction = 1
-            if cBluff > 80 and (myOdds >= myNiveau[2] + 5):
-                myAction = 1
-            if cBluff > 70 and (myOdds >= myNiveau[2] + 10):
-                myAction = 1
-            if cBluff > 60 and (myOdds >= myNiveau[2] + 15):
-                myAction = 1
         else:
             myAction = 1
-            if myButton == 0:
-                cBluff = random.randint(1, 100)
-                if cBluff <= 16:
-                    bet = (cBluff / 4) * 2 * sb
-                    if bet == 0:
-                        bet = 2 * sb
-                    if myCash / (2 * sb) <= 6:
-                        myAction = 4
-                    if bet > (myCash * 4.0 / 5.0):
-                        myAction = 4
-
     return myAction
 
 
@@ -358,17 +282,6 @@ def river(nplayer, sb, holecards, boardCards, mySet, highestSet, myCash, myButto
                 myAction = 4
         else:
             myAction = 1
-            if myButton == 0:
-                cBluff = random.randint(1, 100)
-                if cBluff <= 16:
-                    bet = (cBluff / 4) * 2 * sb
-                    if bet == 0:
-                        bet = 2 * sb
-                    if myCash / (2 * sb) <= 6:
-                        myAction = 4
-                    if bet > (myCash * 4.0 / 5.0):
-                        myAction = 4
-
     return myAction
 
 # print flop(5,10,[1,22],[3,17,5],60,200,700,1,760)
