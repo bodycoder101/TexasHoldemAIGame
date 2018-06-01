@@ -168,7 +168,10 @@ def flop(nplayer, sb, holecards, boardCards, mySet, highestSet, myCash, myButton
                 if highestSet > (myCash * 3.0) / 4.0:
                     myAction = 4
             else:
-                myAction = 0
+                if mySet == highestSet:
+                    myAction = 1
+                else:
+                    myAction = 0
     else:
         if myOdds >= myNiveau[1]:
             myAction = 2
