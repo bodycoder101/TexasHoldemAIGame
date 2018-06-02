@@ -69,6 +69,7 @@ def deal(nplayer, sb, holecards, mySet, highestSet, myCash, myButton):
             if myCash / (2 * sb) <= 6 or raiseValue >= (myCash * 4) / 5:
                 myAction = 4  # allin
 
+        # 增加随机种子，模糊进场
         cBluff = random.randint(1, 100)
         if cBluff > 90:
             myAction = 2
@@ -100,7 +101,7 @@ def deal(nplayer, sb, holecards, mySet, highestSet, myCash, myButton):
             myAction = 0  # 概率太低，fold
             if myButton == 2 and mySet == highestSet:
                 myAction = 1  # 处在大盲，check
-            if myButton == 1 and myCash / highestSet > 50:
+            if myButton == 1 and myCash / highestSet > 88:
                 myAction = 2  # 处在小盲，且代价不大，可以进场打一枪，call
 
     return myAction
@@ -168,7 +169,7 @@ def flop(nplayer, sb, holecards, boardCards, mySet, highestSet, myCash, myButton
                 if highestSet > (myCash * 3.0) / 4.0:
                     myAction = 4
             else:
-                if mySet == highestSet:
+                if myButton == 1 and mySet == highestSet:  # 处在小盲位且翻牌圈第一个说话，可以check
                     myAction = 1
                 else:
                     myAction = 0

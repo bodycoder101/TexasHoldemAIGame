@@ -66,7 +66,7 @@ def init_logger(log_file_name):
     logging.getLogger().addHandler(console)
 
     # console = logging.StreamHandler()
-    # console.setLevel(logging.InFO)
+    # console.setLevel(logging.INFO)
     # formatter = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s')
     # console.setFormatter(formatter)
     # logging.getLogger('').addHandler(console)
@@ -114,9 +114,9 @@ class stubAI:
                 nplayer += 1
 
         myButton = 0  # 默认位置是除大小盲之外的位置
-        if (data["self"]["playerName"] == data["game"]["smallBlind"]["playerName"]):
+        if data["self"]["playerName"] == data["game"]["smallBlind"]["playerName"]:
             myButton = 1  # 表示我处在小盲位置
-        elif (data["self"]["playerName"] == data["game"]["bigBlind"]["playerName"]):
+        elif data["self"]["playerName"] == data["game"]["bigBlind"]["playerName"]:
             myButton = 2  # 表示我处在大盲位置
 
         if data["game"]["roundName"] == "Deal":
@@ -203,7 +203,7 @@ class stubAI:
         global totalReloadCount
         for player in data["players"]:
             if player["playerName"] == self.playerName:
-                if player["chips"] / self.sb < 16 and player["reloadCount"] < totalReloadCount:  # 筹码数少于小盲16倍进行reload一次
+                if player["chips"] / self.sb < 8 and player["reloadCount"] < totalReloadCount:  # 筹码数少于小盲8倍进行reload一次
                     cb_reload()
                     self.reloadCount = totalReloadCount - player["reloadCount"] - 1  # 还剩余的reload次数
 
@@ -223,7 +223,7 @@ class stubAI:
     def Deal(self, data):
         return
 
-    def RoundEnd(self, data):  # 将所有玩家的牌存入dict中，并打印出来，
+    def RoundEnd(self, data):
         logging.info("round end.")
 
         # 将两个Dict初始化为空
@@ -240,6 +240,7 @@ class stubAI:
         for key in self.winPlayer:
             logging.info("This round %s win, hand cards: %s" % (key, self.winPlayer[key]))
 
+        # 将所有玩家的牌存入dict中，并打印出来
         logging.info("Hand cards for each player:")
         for key in self.playerCards:
             logging.info("Player %s: %s" % (key, self.playerCards[key]))
